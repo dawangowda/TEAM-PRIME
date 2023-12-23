@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Video Conferencing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        select,
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        select {
+            width: 150px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        button:hover,
+        select:hover {
+            background-color: #0056b3;
+        }
+
+        #videos {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        video {
+            width: 45%;
+            max-width: 320px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .links {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Video Conferencing</h1>
+
+    <div id="controls">
+        <select id="cameraList"></select>
+        <button id="startButton">Start Video</button>
+        <button id="stopButton">Stop Video</button>
+        <button id="connectButton">Connect</button>
+    </div>
+
+    <div id="videos">
+        <video id="localVideo" autoplay playsinline style="width: 320px; height: 240px;"></video>
+        <video id="remoteVideo" autoplay playsinline style="width: 320px; height: 240px;"></video>
+    </div>
+
+    <div class="links">
+        <a href="documents.html">Upload Documents</a>
+        <a href="chatroom.html">Group Chat</a>
+        <a href="chatbot/chat.html">AI Chat</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/simple-peer@9.1.2/simplepeer.min.js"></script>
+    <script>
+        const cameraList = document.getElementById('cameraList');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const connectButton = document.getElementById('connectButton');
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+        let localStream, peer;
+
+        // Function to get available video devices
+        function getVideoDevices() {
+            navigator.mediaDevices.enumerateDevices()
+                .then(devices => {
+                    devices.forEach(device => {
+                        if (device.kind === 'videoinput') {
+                            const option = document.createElement('option');
+                            option.value = device.deviceId;
+                            option.text = device.label || `Camera ${cameraList.length + 1}`;
+                            cameraList.appendChild(option);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error enumerating devices:', error);
+                });
+        }
+
+        // Function to start video stream with selected camera
+        function startVideo() {
+            const selectedCamera = cameraList.value;
+
+            navigator.mediaDevices.getUserMedia({ video: { deviceId: selectedCamera }, audio: true })
+                .then(videoStream => {
+                    localStream = videoStream;
+                    localVideo.srcObject = localStream;
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices:', error);
+                });
+        }
+
+        // Function to stop video stream
+        function stopVideo() {
+            if (localStream) {
+                const tracks = localStream.getTracks();
+                tracks.forEach(track => track.stop());
+                localVideo.srcObject = null;
+            }
+        }
+
+        // Function to initiate the WebRTC connection
+        function initiateConnection() {
+            peer = new SimplePeer({ initiator: true, stream: localStream });
+
+            peer.on('signal', data => {
+                // Output signal data to be shared with the peer
+                console.log('Signal data to be sent:', data);
+            });
+
+            peer.on('stream', stream => {
+                // Display remote stream
+                remoteVideo.srcObject = stream;
+            });
+
+            // Here, you'd use a signaling server or mechanism to exchange signal data with the remote peer
+            // Then, apply that received signal data to the peer using peer.signal()
+        }
+
+        // Get available video devices when the page loads
+        getVideoDevices();
+
+        // Start video on button click
+        startButton.addEventListener('click', startVideo);
+
+        // Stop video on button click
+        stopButton.addEventListener('click', stopVideo);
+
+        // Establish connection on button click
+        connectButton.addEventListener('click', initiateConnection);
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance And Marks Report Generator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      margin: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #reportContainer {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: none; /* Initially hide the report container */
+    }
+
+    h3 {
+      color: #4CAF50;
+    }
+
+    p {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Generate Attendance Report</h2>
+<form id="Report Form">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="rollNumber">Roll Number:</label>
+  <input type="text" id="rollNumber" name="rollNumber" required>
+
+  <label for="mathsMarks">Marks in Maths:</label>
+  <input type="number" id="mathsMarks" name="mathsMarks" min="0" required>
+
+  <label for="physicsMarks">Marks in Physics:</label>
+  <input type="number" id="physicsMarks" name="physicsMarks" min="0" required>
+
+  <label for="computerScienceMarks">Marks in Computer Science:</label>
+  <input type="number" id="computerScienceMarks" name="computerScienceMarks" min="0" required>
+
+  <label for="attendance">Attendance (%):</label>
+  <input type="number" id="attendance" name="attendance" min="0" max="100" required>
+
+  <button type="button" onclick="generateReport()">Generate Report</button>
+</form>
+
+<!-- Placeholder for displaying the generated report -->
+<div id="reportContainer"></div>
+
+<script>
+  function generateReport() {
+    // Retrieve values from the form
+    const name = document.getElementById('name').value;
+    const rollNumber = document.getElementById('rollNumber').value;
+    const mathsMarks = document.getElementById('mathsMarks').value;
+    const physicsMarks = document.getElementById('physicsMarks').value;
+    const computerScienceMarks = document.getElementById('computerScienceMarks').value;
+    const attendance = document.getElementById('attendance').value;
+
+    // Placeholder to display the report (replace this with your report generation logic)
+    const reportContainer = document.getElementById('reportContainer');
+    reportContainer.style.display = 'block'; // Show the report container
+    reportContainer.innerHTML = `
+      <h3>Attendance Report</h3>
+      <p>Name: ${name}</p>
+      <p>Roll Number: ${rollNumber}</p>
+      <p>Marks in Maths: ${mathsMarks}</p>
+      <p>Marks in Physics: ${physicsMarks}</p>
+      <p>Marks in Computer Science: ${computerScienceMarks}</p>
+      <p>Attendance: ${attendance}%</p>
+      <!-- Additional calculations or formatting of the report can be done here -->
+    `;
+  }
+</script>
+
+</body>
+</html>

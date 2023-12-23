@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Upload</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      margin: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    #uploadForm {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #documentContainer {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #documentDisplay {
+      max-width: 100%;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    #deleteButton {
+      background-color: #FF0000;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Document Upload</h2>
+
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label for="file">Choose Document:</label>
+    <input type="file" id="file" name="file" accept=".pdf, .doc, .docx" required>
+
+    <button type="button" id="uploadButton">Upload Document</button>
+  </form>
+
+  <div id="documentContainer">
+    <div id="documentDisplay"></div>
+    <button id="deleteButton">Delete Document</button>
+  </div>
+
+  <script>
+    let uploadedDocument = null;
+
+    const uploadButton = document.getElementById('uploadButton');
+    const deleteButton = document.getElementById('deleteButton');
+    const documentDisplay = document.getElementById('documentDisplay');
+    const fileInput = document.getElementById('file');
+
+    uploadButton.addEventListener('click', function () {
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          uploadedDocument = e.target.result;
+          documentDisplay.innerHTML = `<embed src="${uploadedDocument}" width="100%" height="500px" />`;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    deleteButton.addEventListener('click', function () {
+      documentDisplay.innerHTML = '';
+      uploadedDocument = null;
+    });
+  </script>
+
+</body>
+
+</html>
